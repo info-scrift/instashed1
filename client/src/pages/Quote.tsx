@@ -3,6 +3,8 @@ import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import { Button } from "@/components/ui/button";
 import heroImage1 from "../../../RequestaQuote/reqaquoteimage1.png";
+import emailjs from 'emailjs-com';
+
 import {
   Select,
   SelectContent,
@@ -83,60 +85,130 @@ export default function Quote() {
     });
   };
 
-  const [isSubmitting, setIsSubmitting] = useState(false);
+ const [isSubmitting, setIsSubmitting] = useState(false);
 
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-    setIsSubmitting(true);
+const handleSubmit = async (e: React.FormEvent) => {
+  e.preventDefault();
+  setIsSubmitting(true);
 
-    try {
-      const response = await fetch('/api/quote', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(formData),
-      });
-
-      const result = await response.json();
-
-      if (result.success) {
-        alert('Quote request submitted successfully! We will contact you soon.');
-        // Reset form
-        setFormData({
-          firstName: "",
-          lastName: "",
-          email: "",
-          phone: "",
-          preferredContact: [],
-          serviceType: "",
-          length: "",
-          width: "",
-          height: "",
-          intendedUse: [],
-          sidingMaterial: [],
-          windowType: "",
-          doorType: "",
-          shelving: [],
-          workbench: [],
-          preferredInstallationDate: "",
-          budget: "",
-          howDidYouHear: "",
-          workshopUse: "",
-          otherUse: "",
-          numberOfWindows: "",
-          windowSize: "",
-        });
-      } else {
-        alert('Failed to submit quote request. Please try again.');
-      }
-    } catch (error) {
-      console.error('Error submitting quote:', error);
-      alert('An error occurred. Please try again.');
-    } finally {
-      setIsSubmitting(false);
-    }
+  const templateParams = {
+    from_name: `${formData.firstName} ${formData.lastName}`,
+    from_email: formData.email,
+    phone: formData.phone,
+    preferredContact: formData.preferredContact.join(", "),
+    serviceType: formData.serviceType,
+    dimensions: `L: ${formData.length}, W: ${formData.width}, H: ${formData.height}`,
+    intendedUse: formData.intendedUse.join(", "),
+    sidingMaterial: formData.sidingMaterial.join(", "),
+    windowDetails: `Count: ${formData.numberOfWindows}, Size: ${formData.windowSize}`,
+    doorType: formData.doorType,
+    shelving: formData.shelving.join(", "),
+    workbench: formData.workbench.join(", "),
+    installationDate: formData.preferredInstallationDate,
+    budget: formData.budget,
+    howDidYouHear: formData.howDidYouHear,
   };
+
+  try {
+    const result = await emailjs.send(
+      'service_1e5ecvm',        // Your service ID
+      'template_vucpwro',       // Your template ID
+      templateParams,
+      'RX8WhPmA1fX7TmMMm'       // Your public key
+    );
+
+    console.log('Email sent successfully:', result);
+    alert('Quote request submitted successfully! We will contact you soon.');
+
+    // Reset form
+    setFormData({
+      firstName: "",
+      lastName: "",
+      email: "",
+      phone: "",
+      preferredContact: [],
+      serviceType: "",
+      length: "",
+      width: "",
+      height: "",
+      intendedUse: [],
+      sidingMaterial: [],
+      windowType: "",
+      doorType: "",
+      shelving: [],
+      workbench: [],
+      preferredInstallationDate: "",
+      budget: "",
+      howDidYouHear: "",
+      workshopUse: "",
+      otherUse: "",
+      numberOfWindows: "",
+      windowSize: "",
+    });
+  } catch (error) {
+    console.error('Error sending email:', error);
+    alert('An error occurred. Please try again.');
+  } finally {
+    setIsSubmitting(false);
+  }
+};
+
+
+
+  // const handleSubmit = async (e: React.FormEvent) => {
+  //   e.preventDefault();
+  //   setIsSubmitting(true);
+
+  //   try {
+  //     // const response = await fetch('/api/quote', {
+  //     //   method: 'POST',
+  //     //   headers: {
+  //     //     'Content-Type': 'application/json',
+  //     //   },
+  //     //   body: JSON.stringify(formData),
+  //     // });
+
+  //     // const result = await response.json();
+
+
+
+  //     if (result.success) {
+  //       alert('Quote request submitted successfully! We will contact you soon.');
+  //       // Reset form
+  //       setFormData({
+  //         firstName: "",
+  //         lastName: "",
+  //         email: "",
+  //         phone: "",
+  //         preferredContact: [],
+  //         serviceType: "",
+  //         length: "",
+  //         width: "",
+  //         height: "",
+  //         intendedUse: [],
+  //         sidingMaterial: [],
+  //         windowType: "",
+  //         doorType: "",
+  //         shelving: [],
+  //         workbench: [],
+  //         preferredInstallationDate: "",
+  //         budget: "",
+  //         howDidYouHear: "",
+  //         workshopUse: "",
+  //         otherUse: "",
+  //         numberOfWindows: "",
+  //         windowSize: "",
+  //       });
+  //     } else {
+  //       alert('Failed to submit quote request. Please try again.');
+  //     }
+  //   } catch (error) {
+  //     console.error('Error submitting quote:', error);
+  //     alert('An error occurred. Please try again.');
+  //   } finally {
+  //     setIsSubmitting(false);
+  //   }
+  // };
 
   return (
     <div className="min-h-screen bg-white">
@@ -495,7 +567,7 @@ export default function Quote() {
                     <div className="grid grid-cols-1 gap-4">
                       <label className="flex items-center cursor-pointer p-4 border border-gray-300 rounded-lg hover:bg-gray-50 transition-colors duration-200">
                         <input
-                          type="checkbox"
+                          type="radio"
                           value="yes"
                           checked={formData.shelving?.includes("yes")}
                           onChange={(e) =>
@@ -507,7 +579,7 @@ export default function Quote() {
                       </label>
                       <label className="flex items-center cursor-pointer p-4 border border-gray-300 rounded-lg hover:bg-gray-50 transition-colors duration-200">
                         <input
-                          type="checkbox"
+                          type="radio"
                           value="no"
                           checked={formData.shelving?.includes("no")}
                           onChange={(e) =>
@@ -526,7 +598,7 @@ export default function Quote() {
                     <div className="grid grid-cols-1 gap-4">
                       <label className="flex items-center cursor-pointer p-4 border border-gray-300 rounded-lg hover:bg-gray-50 transition-colors duration-200">
                         <input
-                          type="checkbox"
+                          type="radio"
                           value="yes"
                           checked={formData.workbench?.includes("yes")}
                           onChange={(e) =>
@@ -538,7 +610,7 @@ export default function Quote() {
                       </label>
                       <label className="flex items-center cursor-pointer p-4 border border-gray-300 rounded-lg hover:bg-gray-50 transition-colors duration-200">
                         <input
-                          type="checkbox"
+                          type="radio"
                           value="no"
                           checked={formData.workbench?.includes("no")}
                           onChange={(e) =>
