@@ -25,6 +25,7 @@ export default function ContactFormSection() {
     phone: "",
     subject: "",
     message: "",
+    serviceType: "", // ← add this line
   });
   const [isSubmitting, setIsSubmitting] = useState(false);
   const { toast } = useToast();
@@ -38,7 +39,7 @@ export default function ContactFormSection() {
     setIsSubmitting(true);
 
     // Only pick the fields you want to send
-    const { firstName, lastName, email, phone, subject, message } = formData;
+    const { firstName, lastName, email, phone, subject, message, serviceType } = formData;
 
     // Compose the payload
     let templateParams = {
@@ -47,13 +48,13 @@ export default function ContactFormSection() {
       phone,
       subject,
       message,
+      serviceType,
     };
 
     console.log('Attempting to send email with params:', templateParams);
 
     try {
       const result = await emailjs.send(
-      
         'service_1e5ecvm', //service key
         'template_itbyobv',//template key
         templateParams,
@@ -74,6 +75,7 @@ export default function ContactFormSection() {
         phone: "",
         subject: "",
         message: "",
+        serviceType: ""
       });
     } catch (error) {
       console.error('Error sending email:', error);
@@ -172,14 +174,11 @@ export default function ContactFormSection() {
                   required
                   className="bg-transparent border-0 border-b border-gray-500 border-opacity-50 text-white placeholder:text-gray-300 focus:border-brand-orange rounded-none"
                 />
-              </div>
-
-              <div className="grid sm:grid-cols-2 gap-4">
                 <Input
-                  type="text"
-                  placeholder="Zip Code / Area (Required)"
-                  value={formData.zipCode}
-                  onChange={(e) => handleInputChange("zipCode", e.target.value)}
+                  type="tel"
+                  placeholder="Phone (Required)"
+                  value={formData.phone}
+                  onChange={(e) => handleInputChange("phone", e.target.value)}
                   required
                   className="bg-transparent border-0 border-b border-gray-500 border-opacity-50 text-white placeholder:text-gray-300 focus:border-brand-orange rounded-none"
                 />
