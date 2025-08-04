@@ -156,3 +156,39 @@
     color: hsl(var(--text-dark));
   }
 }
+
+/* Aminos AI Chatbot - User messages with black text and grey bubble */
+/* 
+[class*="user"][class*="message"],
+[class*="sent"][class*="message"],
+[class*="user-message"],
+[class*="sent-message"],
+[class*="client-message"],
+[class*="userMessage"],
+[class*="sentMessage"],
+[class*="clientMessage"] {
+  color: #000000 !important;
+  background-color: #e0e0e0 !important;
+  border-radius: 8px !important;
+  padding: 8px 12px !important;
+  margin: 4px 0 !important;
+  width: calc(100% - 16px) !important;
+  max-width: calc(100% - 16px) !important;
+} */
+
+/* [class*="user"][class*="message"] *,
+[class*="sent"][class*="message"] *,
+[class*="user-message"] *,
+[class*="sent-message"] *,
+[class*="client-message"] *,
+[class*="userMessage"] *,
+[class*="sentMessage"] *,
+[class*="clientMessage"] * {
+  background-color: transparent !important;
+  color: #000000 !important;
+  width: auto !important;
+  max-width: 100% !important;
+  margin-left: auto !important;
+  margin-right: 0 !important;
+  text-align: right !important;
+} */
